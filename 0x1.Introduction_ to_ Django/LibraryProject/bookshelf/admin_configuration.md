@@ -1,7 +1,12 @@
+## Configuring the Django Admin Interface for the Book Model
+
+### Step 1: Register the Book Model with the Django Admin
+
+In `bookshelf/admin.py`, register the `Book` model:
+
+```python
 from django.contrib import admin
 from .models import Book
-
-# Register your models here.
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
