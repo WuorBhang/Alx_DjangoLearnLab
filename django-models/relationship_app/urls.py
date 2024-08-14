@@ -8,10 +8,9 @@ urlpatterns = [
     path('books-list/', views.BookListView.as_view(), name='books_list'),
     
     # Authentication URLs
-     path('register/', views.register_view, name='register'),
-    path('login/', views.user_login, name='login'),
-    path('logout/', views.user_logout, name='logout'),
-    
+     path('register/', views.register, name='register'),
+    path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout/', LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
     # Relationship App URLs
     path('admin/', views.admin_view, name='admin_view'),
     path('librarian/', views.librarian_view, name='librarian_view'),
