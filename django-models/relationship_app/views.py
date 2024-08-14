@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Book, Library
 from django.views.generic import ListView, DetailView
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import user_passes_test
+from .models import Book, Library, UserProfile
+
+
 
 # Function to list all books
 def list_books(request):
@@ -22,36 +25,60 @@ class BookListView(ListView):
     template_name = 'relationship_app/list_books.html'
     context_object_name = 'books'
 
-# Function to register a new user
+
+
+# relationship_app/views.py
+
 def register_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('list_books')  # Redirect to the book list after registration
+            user = form.save()
+            login(request, user)  # Automatically log in the user
+            return redirect('home')  # Redirect to a home page or dashboard
     else:
         form = UserCreationForm()
-    return render(request, 'relationship_app/register.html', {'form': form})
+    return render(request, 'registration/register.html', {'form': form})
 
-# Function to log in a user
-def login_view(request):
+def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('list_books')  # Redirect to the book list after login
+            return redirect('home')  # Redirect to a home page or dashboard
         else:
-            return HttpResponse("Invalid login")
-    return render(request, 'relationship_app/login.html')
+            return render(request, 'registration/login.html', {'error': 'Invalid credentials'})
+    return render(request, 'registration/login.html')
 
-# Function to log out a user
-def logout_view(request):
+def user_logout(request):
     logout(request)
-    return redirect('login')  # Redirect to the login page after logout
+    return render(request, 'registration/logout.html')
+
+
+
+
+# Create your views for different roles here.
+
+
+def is_admin(user):
+    return user.userprofile.role == 'Admin'
+
+def is_librarian(user):
+    return user.userprofile.role == 'Librarian'
+
+def is_member(user):
+    return user.userprofile.role == 'Member'
+
+@user_passes_test(is_admin)
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html')
+
+@user_passes_test(is_librarian)
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
+
+@user_passes_test(is_member)
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html')
