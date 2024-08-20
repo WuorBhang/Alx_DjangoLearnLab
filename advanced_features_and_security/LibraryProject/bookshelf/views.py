@@ -3,7 +3,24 @@ from django.contrib.auth.decorators import permission_required
 from .models import Document
 from .forms import DocumentForm
 from django.views.generic import ListView
-from .models import Book 
+from .models import Book
+from django.http import HttpResponse
+from django.views.decorators.http import require_POST
+from django import forms
+
+class BookSearchForm(forms.Form):
+    title = forms.CharField(max_length=100)
+
+@require_POST
+def search_books(request):
+    form = BookSearchForm(request.POST)
+    if form.is_valid():
+        title = form.cleaned_data['title']
+        books = Book.objects.filter(title__icontains=title)
+        return render(request, 'books/book_list.html', {'books': books})
+    return HttpResponse("Invalid input", status=400)
+
+
 
 class BookListView(ListView):
     model = Book
