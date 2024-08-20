@@ -1,6 +1,21 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
+
+class Document(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        permissions = [
+            ("can_view", "Can view document"),
+            ("can_create", "Can create document"),
+            ("can_edit", "Can edit document"),
+            ("can_delete", "Can delete document"),
+        ]
+
 
 class SomeModel(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
