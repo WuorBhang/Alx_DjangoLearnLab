@@ -82,6 +82,9 @@ SECURE_HSTS_SECONDS = 31536000  # Set HSTS for one year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Include all subdomains in HSTS policy
 SECURE_HSTS_PRELOAD = True  # Allow preloading of HSTS
 
+# Configure proxy SSL header
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Trust the X-Forwarded-Proto header
+
 
 
 ROOT_URLCONF = 'LibraryProject.urls'
