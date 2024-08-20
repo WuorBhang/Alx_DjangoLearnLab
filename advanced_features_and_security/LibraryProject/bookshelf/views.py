@@ -2,6 +2,18 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 from .models import Document
 from .forms import DocumentForm
+from django.views.generic import ListView
+from .models import Book 
+
+class BookListView(ListView):
+    model = Book
+    template_name = 'books/book_list.html' 
+    context_object_name = 'books'  
+
+    def get_queryset(self):
+        return Book.objects.all()  
+
+
 
 @permission_required('app_name.can_create', raise_exception=True)
 def create_document(request):
