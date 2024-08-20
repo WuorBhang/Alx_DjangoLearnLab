@@ -9,20 +9,19 @@ from django.views.decorators.http import require_POST
 from django import forms
 from .forms import ExampleForm
 
+
 def example_view(request):
     if request.method == 'POST':
         form = ExampleForm(request.POST)
         if form.is_valid():
-            # Process the data in form.cleaned_data
             title = form.cleaned_data['title']
             author = form.cleaned_data['author']
             description = form.cleaned_data['description']
-            # You can save this data to the database or perform other actions
             return render(request, 'success.html', {'title': title})
     else:
         form = ExampleForm()
     
-    return render(request, 'example_form.html', {'form': form})
+    return render(request, 'bookshelf/form_example.html', {'form': form})
 
 
 class BookSearchForm(forms.Form):
