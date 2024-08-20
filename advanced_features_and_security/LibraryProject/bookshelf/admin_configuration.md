@@ -16,3 +16,4 @@ class BookAdmin(admin.ModelAdmin):
 
 # Alternatively, you can use the following method to register
 # admin.site.register(Book, BookAdmin)
+

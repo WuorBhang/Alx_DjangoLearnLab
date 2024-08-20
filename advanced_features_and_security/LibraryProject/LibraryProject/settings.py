@@ -24,6 +24,17 @@ SESSION_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = ['yourdomain.com']
 
+# Secure cookie settings
+SESSION_COOKIE_SECURE = True  # Ensure session cookies are only transmitted over HTTPS
+CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only transmitted over HTTPS
+
+
+# Secure headers
+X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent browsers from MIME-sniffing a response away from the declared content-type
+SECURE_BROWSER_XSS_FILTER = True  # Enable the browser’s XSS filtering
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -63,6 +74,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'csp.middleware.CSPMiddleware',
 ]
+
+
+# Enforce HTTPS connections
+SECURE_SSL_REDIRECT = True  # Redirect all non-HTTPS requests to HTTPS
+SECURE_HSTS_SECONDS = 31536000  # Set HSTS for one year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Include all subdomains in HSTS policy
+SECURE_HSTS_PRELOAD = True  # Allow preloading of HSTS
 
 
 
@@ -142,3 +160,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
