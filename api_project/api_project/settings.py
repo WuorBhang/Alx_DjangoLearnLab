@@ -132,5 +132,6 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',  # Restrict access to authenticated users
+        'IsAuthenticatedOrReadOnly',  # Allow read access to everyone, write access to authenticated users
     ],
 }
