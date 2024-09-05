@@ -65,4 +65,4 @@ class IsAdminOrReadOnly(BasePermission):
             return True
         return request.user and request.user.is_staff
 
-permission_classes = [IsAdminOrReadOnly]
+# permission_classes = [IsAdminOrReadOnly]
