@@ -12,7 +12,7 @@ class BookAPITest(APITestCase):
         self.client = APIClient()
 
         # Create some Book instances
-        self.book1 = Book.objects.create(title='Book 1', author='Author 1', publication_year=2000)
+        self.book1 = Book.objects.create(title='Book 1', author='Author 2', publication_year=2000)
         self.book2 = Book.objects.create(title='Book 2', author='Author 2', publication_year=2020)
 
     def test_list_books(self):
