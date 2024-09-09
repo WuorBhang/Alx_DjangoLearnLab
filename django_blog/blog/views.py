@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post
 from .models import Post, Comment
 from .forms import CommentForm
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 
 # Custom registration view
@@ -165,14 +165,29 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == comment.author
 
 
+
 class CommentCreateView(CreateView):
     model = Comment
     form_class = CommentForm
     template_name = 'blog/comment_form.html'
 
     def form_valid(self, form):
-        form.instance.post_id = self.kwargs['post_id']  # Set the post ID from the URL
+        form.instance.post_id = self.kwargs['post_id']
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+class CommentUpdateView(UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+class CommentDeleteView(DeleteView):
+    model = Comment
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
