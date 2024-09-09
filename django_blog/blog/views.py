@@ -162,3 +162,12 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return self.request.user == comment.author
+
+
+class CommentUpdateView(UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'  # Ensure this template exists
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()  # Redirect to the post's detail page after updating
