@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7=c&5ob^h52-*vl4li=_b7@a40shnon+#rlq*c)audhcr$mbm2'
+SECRET_KEY = 'django-insecure-h*pcf(eh7+w4-$kf$_4tp8wn9=)bs1p=7!fo2x2*0or9s@(aw!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'blog',           # Database name
         'USER': 'postgres',       # Default PostgreSQL user
-        'PASSWORD': 'Bh@ng@t0-2023',           # Leave blank if no password is set, or provide the password
+        'PASSWORD': '',           # Leave blank if no password is set, or provide the password
         'HOST': 'localhost',      # Default host
         'PORT': '5432',           # Default PostgreSQL port
     }
@@ -121,6 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 TEMPLATES = [
     {
@@ -138,7 +139,6 @@ TEMPLATES = [
     },
 ]
 
-STATICFILES_DIRS = [BASE_DIR / 'static']
 
 
 # Default primary key field type

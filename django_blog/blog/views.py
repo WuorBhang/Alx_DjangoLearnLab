@@ -1,32 +1,32 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from .forms import CustomUserCreationForm 
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.contrib.auth.models import User
+
 
 # Custom registration view
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, "Registration successful.")
-            return redirect('home')
-        else:
-            messages.error(request, "Unsuccessful registration. Invalid information.")
+            form.save()
+            return redirect('login')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'blog/register.html', {'form': form})
+
 
 # Profile management view
 @login_required
 def profile(request):
     if request.method == 'POST':
-        user = request.user
-        user.email = request.POST.get('email')
-        user.save()
-        messages.success(request, 'Profile updated successfully.')
-        return redirect('profile')
-    return render(request, 'blog/profile.html')
+        form = CustomUserCreationForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = CustomUserCreationForm(instance=request.user)
+    return render(request, 'blog/profile.html', {'form': form})
+
