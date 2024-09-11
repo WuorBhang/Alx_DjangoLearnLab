@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from .models import Post, Comment
 from .forms import CommentForm
+from taggit.models import Tag
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 
@@ -203,3 +204,21 @@ class SearchResultsView(ListView):
             Q(title__icontains=query) | Q(content__icontains=query) | Q(tags__name__icontains=query)
         ).distinct()
         return object_list
+    
+
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'  # Reuse the post list template
+    context_object_name = 'posts'
+    paginate_by = 10  # Optional: Paginate the posts by 10 per page
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        return Post.objects.filter(tags__in=[tag])  # Filter posts by the tag
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = self.kwargs.get('tag_slug')
+        return context
