@@ -1,46 +1,28 @@
-# accounts/serializers.py
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework.authtoken.models import Token
-from .models import CustomUser
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = ['id', 'username', 'email', 'bio', 'profile_picture']
+User = get_user_model()
 
-class RegisterSerializer(serializers.ModelSerializer):
+class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = get_user_model()
-        fields = ['username', 'email', 'password']
+        model = User
+        fields = ('username', 'email', 'password', 'bio', 'profile_picture')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = get_user_model().objects.create_user(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            password=validated_data['password']
-        )
-        token, created = Token.objects.get_or_create(user=user)
+        user = User(**validated_data)
+        user.set_password(validated_data['password'])  # Hash the password
+        user.save()
+        Token.objects.create(user=user)  # Create a token for the user
         return user
 
-class LoginSerializer(serializers.Serializer):
+class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
 
     def validate(self, data):
-        username = data.get('username')
-        password = data.get('password')
-
-        if username and password:
-            user = authenticate(username=username, password=password)
-            if user:
-                if user.is_active:
-                    data['user'] = user
-                    return data
-                else:
-                    raise serializers.ValidationError('User is not active')
-            else:
-                raise serializers.ValidationError('Incorrect credentials')
-        else:
-            raise serializers.ValidationError('Must provide username and password')
+        user = authenticate(username=data['username'], password=data['password'])
+        if user is None:
+            raise serializers.ValidationError("Invalid credentials")
+        return user
