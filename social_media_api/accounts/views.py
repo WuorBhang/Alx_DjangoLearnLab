@@ -28,4 +28,4 @@ class ProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserRegistrationSerializer
 
     def get_object(self):
-        return self.request.user  # Return the current authenticated user
+        return self.request.user
