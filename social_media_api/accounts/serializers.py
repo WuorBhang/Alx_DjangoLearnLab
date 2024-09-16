@@ -1,29 +1,26 @@
+# accounts/serializers.py
 from rest_framework import serializers
-from .models import CustomUser
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework.authtoken.models import Token
+from .models import CustomUser
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'bio', 'profile_picture', 'followers']
-
-User = get_user_model()
+        fields = ['id', 'username', 'email', 'bio', 'profile_picture']
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['username', 'password', 'email']
+        model = get_user_model()
+        fields = ['username', 'email', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        # Use get_user_model() to create the user
-        user = User.objects.create_user(
+        user = get_user_model().objects.create_user(
             username=validated_data['username'],
-            password=validated_data['password'],
-            email=validated_data['email']
+            email=validated_data['email'],
+            password=validated_data['password']
         )
-        # Create a token for the user
-        Token.objects.create(user=user)
         return user
 
 class LoginSerializer(serializers.Serializer):
@@ -31,7 +28,18 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate(self, data):
-        user = authenticate(**data)
-        if user:
-            return user
-        raise serializers.ValidationError("Invalid credentials")
+        username = data.get('username')
+        password = data.get('password')
+
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if user:
+                if user.is_active:
+                    data['user'] = user
+                    return data
+                else:
+                    raise serializers.ValidationError('User is not active')
+            else:
+                raise serializers.ValidationError('Incorrect credentials')
+        else:
+            raise serializers.ValidationError('Must provide username and password')
