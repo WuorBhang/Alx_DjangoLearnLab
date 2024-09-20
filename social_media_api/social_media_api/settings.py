@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-o9hnv9mv5hs&qx_xvmkle@+6c)zm=8c+v_3rep_1byg6i*+4ip'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -137,3 +137,11 @@ REST_FRAMEWORK = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_SSL_REDIRECT = True
+
+AWS_STORAGE_BUCKET_NAME = 'alx-store-zappa'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

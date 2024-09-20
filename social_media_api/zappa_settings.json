@@ -1,0 +1,20 @@
+{
+    "dev": {
+        "app_function": "social_media_api.setting",
+        "manage_roles": false,
+        "temp_dir": "/path/to/new/temp/dir",
+        "exclude": [
+            "boto3",
+            "dateutil",
+            "botocore",
+            "s3transfer",
+            "concurrent"
+        ],
+        "profile_name": null,
+        "project_name": "social-media-api",
+        "runtime": "python3.12",
+        "s3_bucket": "alx-store-zappa", 
+        "aws_region": "eu-central-1"
+    }
+}
+
